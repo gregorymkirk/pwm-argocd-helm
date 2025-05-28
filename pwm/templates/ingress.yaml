@@ -1,0 +1,83 @@
+
+apiVersion: networking.k8s.io/v1
+kind: IngressClass
+metadata:
+  name: pwm-lb
+  annotations:
+    # Use this annotation to set an IngressClass as Default
+    # If an Ingress doesn't specify a class, it will use the Default
+    #ingressclass.kubernetes.io/is-default-class: "true"
+spec:
+  # Configures the IngressClass to use EKS Auto Mode
+  controller: eks.amazonaws.com/alb
+  parameters:
+    apiGroup: eks.amazonaws.com
+    kind: IngressClassParams
+    # Use the name of the IngressClassParams set in the previous step
+    name: pwm
+
+--- 
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pwm-ingress
+  namespace: {{ .Values.namespace }}
+  annotations:
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.certificatearn }}
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-port: "8443"
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+    alb.ingress.kubernetes.io/inbound-cidrs: {{ .Values.inboundcidrs }} 
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/ssl-policy: {{ .Values.sslpolicy }} 
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  # this matches the name of IngressClass.
+  # this can be omitted if you have a default ingressClass in cluster: the one with ingressclass.kubernetes.io/is-default-class: "true"  annotation
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: pwm-service
+                port:
+                  number: 8443
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pwm-ingress-http
+  namespace: {{ .Values.namespace }}
+  annotations:
+    alb.ingress.kubernetes.io/backend-protocol: HTTPS
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.certificatearn }}
+    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-port: "8443"
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTPS
+    alb.ingress.kubernetes.io/inbound-cidrs: {{ .Values.inboundcidrs }} 
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]' 
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/ssl-policy: {{ .Values.sslpolicy }} 
+    alb.ingress.kubernetes.io/target-type: ip
+spec:
+  # this matches the name of IngressClass.
+  # this can be omitted if you have a default ingressClass in cluster: the one with ingressclass.kubernetes.io/is-default-class: "true"  annotation
+  ingressClassName: alb
+  rules:
+    - http:
+        paths:
+          - path: /*
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: pwm-service
+                port:
+                  number: 8443
+        
+

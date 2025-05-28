@@ -1,0 +1,2 @@
+if an encrytped GP3 storage classass does not exist run this kubernetes manifest below to create it.
+If it does, use the name of that stoarage class in the values.yaml for storageclassname.

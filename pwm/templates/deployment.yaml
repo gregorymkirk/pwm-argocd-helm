@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: password-manager
+  namespace: {{ .Values.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pwm-server
+  template:
+    metadata:
+      labels:
+        app: pwm-server
+    spec:
+      securityContext:
+            fsGroup: 1000 
+            runAsUser: 1000
+      serviceAccountName: pwm-admin
+      containers:
+        - name: pwm
+          image: "{{ .Values.image.repo }}:{{ .Values.image.tag }}"
+          env:
+          - name: PWM_APPLICATIONPATH
+            value: /config
+          resources:
+            limits:
+              memory: {{ .Values.resources.limits.memory }}
+              cpu: {{ .Values.resources.limits.cpu }}
+            requests:
+              memory: {{ .Values.resources.requests.memory }}
+              cpu: {{ .Values.resources.requests.cpu }}
+          ports:
+            - name: httpport
+              containerPort: 8080
+            - name: httpsport
+              containerPort: 8443
+          # livenessProbe:
+          #   httpGet:
+          #     path: "/"
+          #     port: 8443
+          #   initialDelaySeconds: 90
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          #   failureThreshold: 5
+          # readinessProbe:
+          #   httpGet:
+          #     path: "/"
+          #     port: 8443
+          #   initialDelaySeconds: 60
+          #   periodSeconds: 10
+          #   timeoutSeconds: 5
+          #   failureThreshold: 3
+          volumeMounts:
+            - name: pwm-data
+              mountPath: /config
+      volumes:
+        - name: pwm-data
+          persistentVolumeClaim:
+              claimName: pwm-pv-claim

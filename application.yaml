@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: password-manager
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/gregorymkirk/pwm-argocd-helm.git # CodeCommitREpo
+    targetRevision: master
+    path: ./pwm/
+    helm:
+      valueFiles:
+      - govpre.yaml
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: password-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: true
