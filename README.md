@@ -1,7 +1,9 @@
 # pwm-argocd-helm
-Helm chart and ArgoCD app declaration to deploy PWM on your K8S cluster.
+Helm chart and ArgoCD app declaration to deploy PWM on your AWS EKS cluster.
 
-Tested and functional on AWS EKS (1.31), cannot speak to otehr K8S distributions at this time.  I you use this with a differnmt version of distributioin of K8S and it works please either add it to the bottom this readme 
+Tested and functional on AWS EKS (1.31), cannot speak to other K8S distributions at this time.  At a minimum you will need to update the ingress controller, and storage class definitions.   
+
+
 
 
 # Pre-Requisites
