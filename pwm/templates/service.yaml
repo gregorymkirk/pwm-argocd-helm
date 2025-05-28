@@ -19,7 +19,5 @@ spec:
     - name: pwm-web
       port: 8443
       targetPort: 8443
-    # - name: pwm-http
-    #   port: 8080
-    #   targetPort: 8080
+
 

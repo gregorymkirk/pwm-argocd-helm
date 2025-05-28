@@ -1,6 +1,7 @@
 
 # ingress stuff
-inboundcidrs: '0.0.0.0/0' #You probably want to limit this to your org's outbound IP addresses
+#You probably want to limit this to your org's outbound IP addresses, can be comma seprated list.
+inboundcidrs: '0.0.0.0/0' 
 certificatearn: 
 
 sslpolicy:  ELBSecurityPolicy-TLS13-1-2-2021-06 #

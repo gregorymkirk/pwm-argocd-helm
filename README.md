@@ -1,15 +1,20 @@
 # pwm-argocd-helm
-helm chart and argoCD app declaraiton to deploy PWM on your cluster.
+Helm chart and ArgoCD app declaration to deploy PWM on your K8S cluster.
 
-Tested and functional on EKS, cannot speak to otehr K8S distributions.  Irf you are not using EKS you will deinitely need to create a different storage class that works on your environment.
+Tested and functional on AWS EKS (1.31), cannot speak to otehr K8S distributions at this time.  I you use this with a differnmt version of distributioin of K8S and it works please either add it to the bottom this readme 
 
 
-The storage class should be defined before running the chart, unless you have previously defined a strages class in your EKS cluster that you want to use.  
+# Pre-Requisites
+./prereqs: 
+The storage class should be defined before running the chart, unless you have previously defined a storages class in your cluster that you want to use.  Not that this definews a storage clasee or AWS EKS and if you are using a different K8S distribution you will need to create one for your distro.
 
     kubectl apply -f ./prereqs/storage_class.yaml
 
-The helm chart is deined in ./pwm 
+# Helm Chart
+The helm chart is defined in ./pwm 
+example.values.yaml 
 
+# ArgoCD declarative application tile
 For ArgoCD users: 
 
 application.yaml is a declaritive manifest to create and ArgoCD application tile
@@ -17,3 +22,6 @@ application.yaml is a declaritive manifest to create and ArgoCD application tile
     kubectl apply -f ./application.yaml
 
 Helm chart is located in ./pwm  
+
+Tested and works on:
+AWS EKS 1.31 
